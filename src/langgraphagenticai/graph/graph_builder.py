@@ -6,6 +6,7 @@ from src.langgraphagenticai.tools.search_tool import get_tools,create_tool_node
 from langgraph.prebuilt import tools_condition,ToolNode
 from src.langgraphagenticai.nodes.chatbot_with_Tool_node import ChatbotWithToolNode
 from src.langgraphagenticai.nodes.ai_news_node import AINewsNode
+from src.langgraphagenticai.nodes.rag_node import RAGNode
 
 
 class GraphBuilder:
@@ -72,9 +73,15 @@ class GraphBuilder:
         self.graph_builder.add_edge("summarize_news","save_result")
         self.graph_builder.add_edge("save_result", END)
 
+    def ai_research_assistant_build_graph(self):
+        rag_node = RAGNode(self.llm)
+
+        self.graph_builder.add_node("rag", rag_node.__call__)
+
+        self.graph_builder.add_edge(START, "rag")
+        self.graph_builder.add_edge("rag", END)
 
        
-
 
 
     def setup_graph(self, usecase: str):
@@ -87,5 +94,7 @@ class GraphBuilder:
             self.chatbot_with_tools_build_graph()
         if usecase == "AI News":
             self.ai_news_builder_graph()
+        if usecase == "AI Research Assistant":
+            self.ai_research_assistant_build_graph()
 
         return self.graph_builder.compile()

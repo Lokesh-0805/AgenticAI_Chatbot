@@ -71,4 +71,24 @@ class LoadStreamlitUI:
                     st.session_state.timeframe = time_frame
 
 
+            if self.user_controls['selected_usecase']=="AI Research Assistant":
+                st.subheader("📄 AI Research Assistant")
+
+                # File Upload
+                uploaded_file = st.file_uploader(
+                    "Upload Research Paper (PDF/Text)",
+                    type=["pdf", "txt"]
+                )
+
+                if uploaded_file is not None:
+                    # Store file in session (important)
+                    st.session_state["uploaded_file"] = uploaded_file
+                    st.success(f"✅ Uploaded: {uploaded_file.name}")
+                else:
+                    st.warning("⚠️ Please upload a research paper to proceed.")
+                # Ask question input trigger
+                st.info("💡 After uploading, ask questions in the chat input below.")
+                            
+
+
         return self.user_controls

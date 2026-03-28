@@ -58,3 +58,31 @@ class DisplayResultStreamlit:
                     st.error(f"News Not Generated or File not found: {AI_NEWS_PATH}")
                 except Exception as e:
                     st.error(f"An error occurred: {str(e)}")
+
+
+        elif usecase == "AI Research Assistant":
+            initial_state = {
+                "messages": [HumanMessage(content=user_message)]
+            }
+
+            res = graph.invoke(initial_state)
+
+            # 🔷 Show user message once
+            with st.chat_message("user"):
+                st.markdown(user_message)
+
+            # 🔷 Extract only final AI response
+            ai_response = None
+            for message in res['messages']:
+                if isinstance(message, AIMessage) and message.content:
+                    ai_response = message.content
+
+            if ai_response:
+                # 🧹 Clean formatting (optional)
+                clean_response = ai_response.strip()
+
+                with st.chat_message("assistant"):
+                    st.markdown(
+                        clean_response,
+                        unsafe_allow_html=False
+                    )
