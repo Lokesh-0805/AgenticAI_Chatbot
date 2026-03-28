@@ -23,6 +23,7 @@ class LoadStreamlitUI:
             # LLM selection
             self.user_controls["selected_llm"] = st.selectbox("Select LLM", llm_options)
 
+            # GROQ CONFIG 
             if self.user_controls["selected_llm"] == 'Groq':
                 # Model selection
                 model_options = self.config.get_groq_model_options()
@@ -31,6 +32,20 @@ class LoadStreamlitUI:
                 # Validate API key
                 if not self.user_controls["GROQ_API_KEY"]:
                     st.warning("⚠️ Please enter your GROQ API key to proceed. Don't have? refer : https://console.groq.com/keys ")
+            
+            # OPENAI CONFIG 
+            elif self.user_controls["selected_llm"] == 'OpenAI':
+                model_options = self.config.get_openai_model_options()  # make sure you add this in config
+                self.user_controls["selected_openai_model"] = st.selectbox("Select Model", model_options)
+
+                self.user_controls["OPENAI_API_KEY"] = st.session_state["OPENAI_API_KEY"] = st.text_input(
+                    "OpenAI API Key", type="password"
+                )
+
+                if not self.user_controls["OPENAI_API_KEY"]:
+                    st.warning("⚠️ Please enter your OpenAI API key to proceed.")
+
+
             
             ## USecase selection
             self.user_controls["selected_usecase"]=st.selectbox("Select Usecases",usecase_options)
