@@ -90,13 +90,15 @@ class RAGNode:
 
         uploaded_file = st.session_state.get("uploaded_file", None)
 
-        if uploaded_file:
+        if uploaded_file and not st.session_state.get("rag_initialized", False):
             documents = self.load_document(uploaded_file)
             chunks = self.split_documents(documents)
             self.store_in_pinecone(chunks)
+            st.session_state["rag_initialized"] = True
+            st.success("✅ Document processed successfully!")
 
         docs = self.retrieve(user_query)
 
         answer = self.generate_answer(user_query, docs)
 
-        return {"messages": [AIMessage(content=str(answer))]}
+        return {"messages": [AIMessage(content=str(answer.content))]}
